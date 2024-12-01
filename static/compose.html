@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Compose Email</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="compose-form">
+    <h2>Compose Email</h2>
+    <form id="emailForm">
+      <input type="text" id="recipient" placeholder="Recipient (e.g., email://user@domain)" required>
+      <input type="text" id="subject" placeholder="Subject" required>
+      <textarea id="message" placeholder="Message" rows="6" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('emailForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Please log in first.');
+        return;
+      }
+
+      const recipient = document.getElementById('recipient').value.replace('email://', '');
+      const subject = document.getElementById('subject').value;
+      const message = document.getElementById('message').value;
+
+      const res = await fetch('/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sender: 'me', recipient, subject, message }),
+      });
+
+      if (res.status === 200) {
+        alert('Email sent!');
+      } else {
+        alert('Failed to send email');
+      }
+    });
+  </script>
+</body>
+</html>
