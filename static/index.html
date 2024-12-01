@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Inbox</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="inbox"></div>
+  <script>
+    async function fetchInbox() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Please log in first.');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const res = await fetch(`/inbox/me`);
+      const emails = await res.json();
+      const inbox = document.getElementById('inbox');
+      inbox.innerHTML = emails.map(email => `<div>${email.subject} - ${email.sender}</div>`).join('');
+    }
+    fetchInbox();
+  </script>
+</body>
+</html>
